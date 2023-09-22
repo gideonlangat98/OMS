@@ -1,0 +1,266 @@
+.App {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 100vw;
+  min-height: 100vh;
+  background:linear-gradient(rgb(166, 159, 255), rgb(214, 214, 214));
+}
+
+.home{
+  margin-right: 4rem;
+}
+
+.app-background{
+  background-color: rgb(34, 220, 170);
+  background-size: cover;
+  height: 100vh;
+}
+
+.main{
+  border: 1px solid;
+  border-radius: 5px;
+  overflow: hidden;
+  background-color: white;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+  border-color: rgb(245, 242, 242);
+  padding-left: 4rem;
+  max-width: 100%;
+  min-width: 70%;
+  float: right;
+  margin-right: 3.8rem;
+  margin-top: 1rem;
+  padding-right: 2rem;
+  padding-bottom: 1rem;
+}
+
+.timesheets{
+  border: 1px solid;
+  border-radius: 5px;
+  overflow: hidden;
+  background-color: white;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+  border-color: rgb(245, 242, 242);
+  padding-left: 4rem;
+  max-width: 100%;
+  min-width: 70%;
+  float: right;
+  margin-top: 2rem;
+  margin-right: 7rem;
+  padding-right: 2rem;
+  padding-bottom: 4rem;
+}
+
+.taskss{
+  border: 1px solid;
+  border-radius: 5px;
+  overflow: hidden;
+  background-color: white;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+  border-color: rgb(245, 242, 242);
+  padding-left: 4rem;
+  max-width: 100%;
+  min-width: 70%;
+  float: right;
+  margin-top: 2rem;
+  margin-right: 0.3rem;
+  padding-right: 2rem;
+  padding-bottom: 4rem;
+}
+
+.staff-details{
+  border: 1px solid;
+  border-radius: 5px;
+  overflow: hidden;
+  background-color: white;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+  border-color: rgb(245, 242, 242);
+  padding-left: 3rem;
+  max-width: 100%;
+  min-width: 70%;
+  float: right;
+  margin-top: 1.5rem;
+  margin-right: 6.5rem;
+  margin-bottom: 2rem;
+  margin-left: 2rem;
+  padding-right: 2rem;
+  padding-bottom: 2.5rem;
+}
+
+.form-type{
+  border: 1px solid;
+  border-radius: 5px;
+  overflow: hidden;
+  background-color: white;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+  border-color: rgb(245, 242, 242);
+  padding-left: 2rem;
+  padding-top: 3.2rem;
+  max-width: 50%;
+  min-width: 40%;
+  float: right;
+  margin-right: 17rem;
+  width: 30%;
+  max-width: auto;
+  margin-top: 4rem;
+  padding-bottom: 4rem;
+}
+
+.requests{
+  border: 1px solid;
+  border-radius: 5px;
+  overflow: hidden;
+  background-color: white;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+  border-color: rgb(245, 242, 242);
+  padding-left: 2rem;
+  max-width: 100%;
+  min-width: 70%;
+  float: right;
+  margin-right: 4.6rem;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+  padding-right: 3rem;
+}
+
+.container{
+  margin-bottom: 4rem;
+  margin-top: 2rem;
+}
+
+.home{
+  text-align: center;
+}
+
+.loginContainer{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 25em;
+  height: 85vh;
+  background-color: rgb(255, 255, 255);
+  border-radius: 25px;
+}
+.input-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 10px;
+}
+.input-container input{
+  height: 1.5em;
+  width: 15em;
+  border-radius: 15px;
+  border-width: 15px;
+  border:white;
+  box-shadow: 0 0 6px rgb(166, 159, 255);
+  outline: none;
+  padding:10px;
+  font-size: 20px;
+}
+input:focus{   
+  box-shadow: 0 1px 1px rgba(229, 103, 23, 0.075) inset, 0 0 16px rgb(125, 115, 255);
+  outline: 0 none;
+}
+a{
+  color: rgb(0, 68, 255);
+  font-weight: 500;
+  margin: 5px;
+  cursor: pointer;
+  align-self: baseline;
+  margin-left: 40px;
+}
+.loginBut {
+  height: 4em;
+  width: 24em;
+  margin: 10px;
+  margin-top: 25px;
+  border-radius: 15px;
+  background:linear-gradient(rgb(124, 114, 255), rgb(255, 116, 116));
+  border: none;
+  transition: all .2s ease-in-out;
+}
+.loginBut:hover{
+  transform: scale(1.1);
+  box-shadow: 0 0 12px rgb(199, 199, 199);
+}
+.loginBut p{
+  color:white;
+  font-size: 20px;
+  margin-top: 13px;
+}
+.siG{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap:18px;
+  height: 4em;
+  width: 24em;
+  margin: 10px;
+  border-radius: 15px;
+  background-color: rgb(255, 255, 255);
+  border-color: rgb(152, 145, 255);
+  border-width: 3px;
+  border-style: dashed;
+  transition: all .2s ease-in-out;
+}
+.siG:hover{
+  transform: scale(1.1);
+  box-shadow: 0 0 12px rgb(199, 199, 199);
+  cursor: pointer;
+}
+.siG p{
+  font-size: 20px;
+}
+
+/* .type{
+  text-align: center;
+  font-size: x-large;
+  margin-bottom: 10px;
+} */
+
+.labelName{
+  display: flex;
+}
+
+.days{
+  display: flex;
+}
+
+.nameInput{
+  width: 5%;
+  margin-bottom: 18px;
+}
+
+.subm{
+  margin-left: 3.3rem;
+}
+
+.nameLabel{
+  font-size: 17px;
+  font-weight: bold;
+  margin-top: 2px;
+  margin-right: 3px;
+}
+
+.daysLabel{
+  font-size: 17px;
+  font-weight: bold;
+  margin-top: 2px;
+  margin-right: 10px;
+}
+
+.leave-form{
+  border: 1px solid;
+  border-radius: 5px;
+  overflow: hidden;
+  background-color: white;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+  border-color: rgb(245, 242, 242);
+  padding-left: 4rem;
+  max-width: 50%;
+  min-width: 30%;
+  margin-top: 1.5rem;
+  margin-bottom: 3rem;
+  margin-right: 5rem;
+}
