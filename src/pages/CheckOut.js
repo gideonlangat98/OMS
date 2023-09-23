@@ -12,7 +12,7 @@ function CheckOut({ isCheckedIn, isCheckedOut, setIsCheckedIn, setIsCheckedOut }
     if (isCheckedOut === null) {
       setError(null); // Clear any previous error messages
     } else if (isCheckedOut) {
-      setError({ message: 'You have already checked out.' });
+      setError({ message: '' });
     }
   }, [isCheckedOut]);
 
@@ -67,7 +67,7 @@ function CheckOut({ isCheckedIn, isCheckedOut, setIsCheckedIn, setIsCheckedOut }
 
   return (
     <div>
-      {error && <div>Error: {error.message}</div>}
+      {error && <div>{error.message}</div>}
       {successMessage && <div>{successMessage}</div>}
       <Button variant='danger' onClick={handleCheckOut} style={{ padding: '1.5rem' }}>
         Check Out
