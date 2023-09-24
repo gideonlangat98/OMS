@@ -64,6 +64,7 @@ function StaffDashboard({
   const [showTimeSheetCard, setShowTimeSheetCard] = useState(false);
   const [showLeaveFormCard, setShowLeaveFormCard] = useState(false);
   const [showChat, setShowChat] = useState(false);
+  const [hideCompanyNews, setHideCompanyNews] = useState(false);
 
   const handleCardsClick = (cardName) => {
     setShowProjectsCard(cardName === 'projects');
@@ -72,12 +73,14 @@ function StaffDashboard({
     setShowLeaveFormCard(cardName === 'forms');
     setShowHistoryCard(cardName === 'history');
     setShowChat(cardName === 'chat');
+
+    setHideCompanyNews(cardName === 'tasks');
   };
 
 
   return (
     <div className="flex bg-gray-100">
-      <main>
+      <main className={showTasksCard ? 'w-full' : 'w-1/2'}>
       <h2 className="text-3xl font-bold text-gray-800 mb-4">Dashboard Overview</h2>
       {!showChat && !showProjectsCard && !showTasksCard && !showTimeSheetCard && !showLeaveFormCard && !showHistoryCard && (
        <div className="grid grid-cols-3 gap-4">
@@ -195,7 +198,7 @@ function StaffDashboard({
 )}
 
 {showTasksCard && (
-  <div>
+  <div className="w-full">
     <div className='text-left'>
         <button className="mt-2 mb-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
           onClick={() => setShowTasksCard(false)}
@@ -300,9 +303,10 @@ function StaffDashboard({
 )}
 
       </main>
-      <aside className="w-1/2 p-6 border-l border-gray-300">
-        <CompanyNews company_articles={company_articles}/>
+      <aside className={showTasksCard ? 'hidden' : 'w-1/2 p-6 border-l border-gray-300'}>
+        {!hideCompanyNews && <CompanyNews company_articles={company_articles} />}
       </aside>
+
     </div>
   );
 }

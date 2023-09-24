@@ -6,6 +6,18 @@ import Request from './Request';
 import { useDropzone } from 'react-dropzone';
 import axios from 'axios';
 import { OmsContext } from '../components/auth/AuthContext';
+import { randomColor } from 'randomcolor'; // Import the randomcolor library
+
+
+const rainbowColors = [
+  '#FF0000', // Red
+  '#FF7F00', // Orange
+  '#FFFF00', // Yellow
+  '#00FF00', // Green
+  '#0000FF', // Blue
+  '#4B0082', // Indigo
+  '#8B00FF', // Violet
+]
 
 const Tasks = ({ staffs, managers, progresses, loggedInStaff, updateProgress, useType, deleteProgress, handleUpdateProgress, projects, requests, deleteRequest, updateRequest, handleUpdateRequest, deleteTask, userType, tasks, setTasks }) => {
   const [showModal, setShowModal] = useState(false);
@@ -30,13 +42,52 @@ const Tasks = ({ staffs, managers, progresses, loggedInStaff, updateProgress, us
   const [showRequests, setShowRequests] = useState(false);
   const [showProgress, setShowProgress] = useState(false);
 
+  const [showTasksTable, setShowTasksTable] = useState(true)
+
+  // const assignColorToTask = (taskId) => {
+  //   const colorIndex = Object.keys(taskColors).length % rainbowColors.length;
+  //   setTaskColors((prevColors) => ({
+  //     ...prevColors,
+  //     [taskId]: rainbowColors[colorIndex],
+  //   }));
+  // };
+
+  // useEffect(() => {
+  //   // Assign colors to existing tasks when the component mounts
+  //   tasks.forEach((task) => {
+  //     if (!taskColors[task.id]) {
+  //       assignColorToTask(task.id);
+  //     }
+  //   });
+  // }, [tasks, taskColors]);
+
   const toggleRequests = () => {
     setShowRequests(!showRequests);
+    setShowTasksTable(false);
+    setShowProgress(false);
   };
 
   const toggleProgress = () => {
     setShowProgress(!showProgress);
-  }
+    setShowTasksTable(false);
+    setShowRequests(false);
+  };
+
+  const [taskColors] = useState(() => {
+    const initialColors = {}; // Store colors for each task
+    tasks.forEach((task) => {
+      initialColors[task.id] = randomColor(); // Generate a random color for each task
+    });
+    return initialColors; // Set the initial colors
+  });
+  
+  const handleTaskCardClick = (taskId) => {
+    setSelectedTask(taskId); // Set the selected task
+    setShowTasksTable(true); // Show the task table when a task card is clicked
+    setShowProgress(false); // Hide the progress table
+    setShowRequests(false); // Hide the requests table
+  };
+  
 
   const getSelectedTaskData = () => {
     if (!selectedTask) return null;
@@ -44,11 +95,11 @@ const Tasks = ({ staffs, managers, progresses, loggedInStaff, updateProgress, us
   };
 
   useEffect(() => {
-    if( tasks && tasks.length > 0) {
+    if (tasks && tasks.length > 0) {
       setSelectedTask(tasks[0].id);
     }
   }, [tasks])
-  
+
   const handleChange = (event) => {
     const { name, value } = event.target;
     setForm((prevData) => ({
@@ -382,21 +433,25 @@ const Tasks = ({ staffs, managers, progresses, loggedInStaff, updateProgress, us
         </Modal.Body>
       </Modal>
       <div className="flex">
-        <div className="w-1/2 pr-16">
+      <div className="w-1/2 pr-16">
           <div className="mb-3">
-            <Form.Group controlId="formTaskDropdown">
-              <Form.Label>Select Task</Form.Label>
-              <Form.Control as="select" value={selectedTask} onChange={(e) => setSelectedTask(Number(e.target.value))}>
-                <option value="">Select Task</option>
-                {tasks &&
-                  Array.isArray(tasks) &&
-                  tasks.map((task) => (
-                    <option key={task.id} value={task.id}>
-                      Task {task.id}
-                    </option>
-                  ))}
-              </Form.Control>
-            </Form.Group>
+            <h4>Select Task</h4>
+            <div className="grid grid-cols-2 gap-2">
+            {tasks.map((task) => (
+            <div
+              key={task.id}
+              onClick={() => handleTaskCardClick(task.id)}
+              className={`p-3 border rounded-lg cursor-pointer`}
+              style={{
+                backgroundColor: taskColors[task.id] || 'transparent',
+              }}
+            >
+              Task {task.id}
+            </div>
+          ))}
+
+
+            </div>
             <div className="mt-3">
               <Link to="#" onClick={toggleProgress} className='text-xl font-bold no-underline hover:underline'>
                 Task Update
@@ -409,7 +464,7 @@ const Tasks = ({ staffs, managers, progresses, loggedInStaff, updateProgress, us
             </div>
           </div>
         </div>
-        <div className="w-full">
+        <div className={`w-full ${showTasksTable ? '' : 'hidden'}`}>
           {selectedTask !== null && (
             <Table striped bordered hover style={{ width: '80%' }}>
               <thead>
@@ -506,23 +561,8 @@ const Tasks = ({ staffs, managers, progresses, loggedInStaff, updateProgress, us
             </Table>
           )}
         </div>
-      </div>
-      {showRequests && (
-        <div className="sticky top-0 h-full">
-            <Request
-              userType={userType}
-              useType={useType}
-              managers={managers}
-              requests={requests}
-              deleteRequest={deleteRequest}
-              updateRequest={updateRequest}
-              handleUpdateRequest={handleUpdateRequest}
-              loggedInStaff={loggedInStaff}
-            />
-        </div>
-      )}
-      {showProgress && (
-        <div className="sticky top-0 h-full">
+        <div className={`w-full ${showProgress ? '' : 'hidden'}`}>
+          {showProgress && (
             <TaskProgress
               userType={userType}
               useType={useType}
@@ -533,8 +573,23 @@ const Tasks = ({ staffs, managers, progresses, loggedInStaff, updateProgress, us
               handleUpdateProgress={handleUpdateProgress}
               loggedInStaff={loggedInStaff}
             />
+          )}
         </div>
-      )}
+        <div className={`w-full ${showRequests ? '' : 'hidden'}`}>
+          {showRequests && (
+            <Request
+              userType={userType}
+              useType={useType}
+              managers={managers}
+              requests={requests}
+              deleteRequest={deleteRequest}
+              updateRequest={updateRequest}
+              handleUpdateRequest={handleUpdateRequest}
+              loggedInStaff={loggedInStaff}
+            />
+          )}
+        </div>
+      </div>
     </div>
   );
 };
