@@ -19,7 +19,8 @@ import {
   FaClock,
   FaRegSnowflake,
   FaRegFileAlt,
-  FaCalculator
+  FaCalculator,
+  FaChevronLeft,
 } from 'react-icons/fa';
 
 function Dashboard({
@@ -102,12 +103,12 @@ function Dashboard({
       {!showChat && !showReport && !showStaffCard && !showManagerCard && !showClientCard && !showProjectsCard && !showTasksCard && !showTimeSheetsCard && !showLeaveCard && !showRequestCard && !showCalculationCard && (
         <div className="grid grid-cols-3 gap-4">
           <div
-            className="cursor-pointer dashboard-card bg-lime-500"
+            className="cursor-pointer dashboard-card rounded-md bg-lime-500"
             onClick={() => {
               handleCardClick('chats');
             }}
           >
-            <div className="relative p-4 rounded-lg shadow-md dark:bg-gray-800">
+            <div className="relative p-4 rounded-lg shadow-md rounded-md dark:bg-gray-800">
               <div className='flex justify-between'>
                   <FaInbox size={25} className="text-lg font-medium mb-2" />
                   <h4 className="text-lg text-xl font-medium mb-2">Inbox</h4>
@@ -115,7 +116,7 @@ function Dashboard({
             </div>
           </div>
 
-          <div className="cursor-pointer dashboard-card bg-cyan-500" onClick={() => handleCardClick('staffs')}>
+          <div className="cursor-pointer dashboard-card rounded-md bg-cyan-500" onClick={() => handleCardClick('staffs')}>
             <div className="p-4 rounded-lg shadow-md dark:bg-gray-800">
               <div className='flex justify-between'>
                   <FaUser size={25} className="text-lg font-medium mb-2" />
@@ -125,7 +126,7 @@ function Dashboard({
             </div>
           </div>
 
-          <div className="cursor-pointer dashboard-card bg-purple-500" onClick={() => handleCardClick('managers')}>
+          <div className="cursor-pointer dashboard-card rounded-md bg-purple-500" onClick={() => handleCardClick('managers')}>
             <div className="p-4 rounded-lg shadow-md dark:bg-gray-800">
               <div className='flex justify-between'>
                   <FaUserTie size={25} className="text-lg font-medium mb-2" />
@@ -134,7 +135,7 @@ function Dashboard({
               <p className="text-white font-bold text-2xl">{managers.length}</p>
             </div>
           </div>
-          <div className="cursor-pointer dashboard-card bg-blue-500" onClick={() => handleCardClick('clients')}>
+          <div className="cursor-pointer dashboard-card rounded-md bg-blue-500" onClick={() => handleCardClick('clients')}>
             <div className="p-4 rounded-lg shadow-md dark:bg-gray-800">
               <div className='flex justify-between'>
                   <FaUsers size={25} className="text-lg font-medium mb-2" />
@@ -144,7 +145,7 @@ function Dashboard({
             </div>
           </div>
 
-          <div className="cursor-pointer dashboard-card bg-indigo-500" onClick={() => handleCardClick('projects')}>
+          <div className="cursor-pointer dashboard-card rounded-md bg-indigo-500" onClick={() => handleCardClick('projects')}>
             <div className="p-4 rounded-lg shadow-md dark:bg-gray-800">
              <div className='flex justify-between'>
                  <FaTasks size={25} className="text-lg font-medium mb-2" />
@@ -154,7 +155,7 @@ function Dashboard({
             </div>
           </div>
 
-          <div className="cursor-pointer dashboard-card bg-green-500" onClick={() => handleCardClick('tasks')}>
+          <div className="cursor-pointer dashboard-card rounded-md bg-green-500" onClick={() => handleCardClick('tasks')}>
             <div className="p-4 rounded-lg shadow-md dark:bg-gray-800">
              <div className='flex justify-between'>
                  <FaTasks size={25} className="text-lg font-medium mb-2" />
@@ -164,7 +165,7 @@ function Dashboard({
             </div>
           </div>
 
-          <div className="cursor-pointer dashboard-card bg-red-500" onClick={() => handleCardClick('timesheets')}>
+          <div className="cursor-pointer dashboard-card rounded-md bg-red-500" onClick={() => handleCardClick('timesheets')}>
             <div className="p-4 rounded-lg shadow-md dark:bg-gray-800">
               <div className='flex justify-between'>
                   <FaClock size={25} className="text-lg font-medium mb-2" />
@@ -174,7 +175,7 @@ function Dashboard({
             </div>
           </div>
           
-          <div className="cursor-pointer dashboard-card bg-pink-500" onClick={() => handleCardClick('leave_types')}>
+          <div className="cursor-pointer dashboard-card rounded-md bg-pink-500" onClick={() => handleCardClick('leave_types')}>
             <div className="p-4 rounded-lg shadow-md dark:bg-gray-800">
               <div className='flex justify-between'>
                   <FaRegSnowflake size={25} className="text-lg font-medium mb-2" />
@@ -184,7 +185,7 @@ function Dashboard({
             </div>
           </div>
           
-          <div className="cursor-pointer dashboard-card bg-red-400" onClick={() => handleCardClick('forms')}>
+          <div className="cursor-pointer dashboard-card rounded-md bg-red-400" onClick={() => handleCardClick('forms')}>
             <div className="p-4 rounded-lg shadow-md dark:bg-gray-800">
               <div className='flex justify-between'>
                   <FaRegFileAlt size={25} className="text-lg font-medium mb-2" />
@@ -194,7 +195,7 @@ function Dashboard({
             </div>
           </div>
 
-          <div className="cursor-pointer dashboard-card bg-yellow-500" onClick={() => handleCardClick('leave_calculations')}>
+          <div className="cursor-pointer dashboard-card rounded-md bg-yellow-500" onClick={() => handleCardClick('leave_calculations')}>
             <div className="p-4 rounded-lg shadow-md dark:bg-gray-800">
               <div className='flex justify-between'>
                   <FaCalculator size={25} className="text-lg font-medium mb-2" />
@@ -204,8 +205,8 @@ function Dashboard({
             </div>
           </div>
 
-          <div className="cursor-pointer dashboard-card bg-fuchsia-500" onClick={() => handleCardClick('reports')}>
-            <div className="p-4 rounded-lg shadow-md dark:bg-gray-800">
+          <div className="cursor-pointer dashboard-card rounded-md bg-fuchsia-500" onClick={() => handleCardClick('reports')}>
+            <div className="p-4 shadow-md dark:bg-gray-800">
               <div className='flex justify-between'>
                   <FaRegFileAlt size={25} className="text-lg font-medium mb-2" />
                   <h4 className="text-lg text-xl font-medium mb-2">Tasks Report</h4>
@@ -419,8 +420,6 @@ function Dashboard({
           />
         </div>
       )}
-
-
 
     </div>
   );

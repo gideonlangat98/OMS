@@ -700,6 +700,7 @@ function StDashboard({ staffs, setStaffs, isStaff, isCheckedIn, isCheckedOut, se
             path="/requests"
             element={
               <Request
+                tasks={tasks}
                 managers={managers}
                 useType={useType}
                 requests={requests}

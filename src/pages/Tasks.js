@@ -6,18 +6,7 @@ import Request from './Request';
 import { useDropzone } from 'react-dropzone';
 import axios from 'axios';
 import { OmsContext } from '../components/auth/AuthContext';
-import { randomColor } from 'randomcolor'; // Import the randomcolor library
-
-
-const rainbowColors = [
-  '#FF0000', // Red
-  '#FF7F00', // Orange
-  '#FFFF00', // Yellow
-  '#00FF00', // Green
-  '#0000FF', // Blue
-  '#4B0082', // Indigo
-  '#8B00FF', // Violet
-]
+import { randomColor } from 'randomcolor';
 
 const Tasks = ({ staffs, managers, progresses, loggedInStaff, updateProgress, useType, deleteProgress, handleUpdateProgress, projects, requests, deleteRequest, updateRequest, handleUpdateRequest, deleteTask, userType, tasks, setTasks }) => {
   const [showModal, setShowModal] = useState(false);
@@ -25,6 +14,7 @@ const Tasks = ({ staffs, managers, progresses, loggedInStaff, updateProgress, us
   const [editingTaskId, setEditingTaskId] = useState(null);
   const [form, setForm] = useState({
     assignment_date: '',
+    completion_date: '',
     task_name: '',
     assigned_to: '',
     task_manager: '',
@@ -43,23 +33,6 @@ const Tasks = ({ staffs, managers, progresses, loggedInStaff, updateProgress, us
   const [showProgress, setShowProgress] = useState(false);
 
   const [showTasksTable, setShowTasksTable] = useState(true)
-
-  // const assignColorToTask = (taskId) => {
-  //   const colorIndex = Object.keys(taskColors).length % rainbowColors.length;
-  //   setTaskColors((prevColors) => ({
-  //     ...prevColors,
-  //     [taskId]: rainbowColors[colorIndex],
-  //   }));
-  // };
-
-  // useEffect(() => {
-  //   // Assign colors to existing tasks when the component mounts
-  //   tasks.forEach((task) => {
-  //     if (!taskColors[task.id]) {
-  //       assignColorToTask(task.id);
-  //     }
-  //   });
-  // }, [tasks, taskColors]);
 
   const toggleRequests = () => {
     setShowRequests(!showRequests);
@@ -108,6 +81,20 @@ const Tasks = ({ staffs, managers, progresses, loggedInStaff, updateProgress, us
     }));
   };
 
+  useEffect(() => {
+    const assignmentDate = new Date(form.assignment_date);
+    const completionDate = new Date(form.completion_date);
+    
+    if (!isNaN(assignmentDate) && !isNaN(completionDate)) {
+      const timeDifference = completionDate - assignmentDate;
+      const daysDifference = Math.ceil(timeDifference / (1000 * 3600 * 24));
+      setForm((prevData) => ({
+        ...prevData,
+        task_deadline: daysDifference.toString(),
+      }));
+    }
+  }, [form.assignment_date, form.completion_date]);
+
   const handleDrop = (acceptedFiles, field) => {
     setForm((prevData) => ({
       ...prevData,
@@ -145,6 +132,7 @@ const Tasks = ({ staffs, managers, progresses, loggedInStaff, updateProgress, us
     try {
       const formData = new FormData();
       formData.append('assignment_date', form.assignment_date);
+      formData.append('completion_date', form.completion_date);
       formData.append('task_name', form.task_name);
       formData.append('assigned_to', form.assigned_to);
       formData.append('task_manager', form.task_manager);
@@ -157,7 +145,7 @@ const Tasks = ({ staffs, managers, progresses, loggedInStaff, updateProgress, us
       });
 
       form.completedFiles.forEach((file) => {
-        formData.append('completed_files[]', file); // Send completed files as an array
+        formData.append('completed_files[]', file);
       });
 
       const method = editingTaskId ? 'put' : 'post';
@@ -192,6 +180,7 @@ const Tasks = ({ staffs, managers, progresses, loggedInStaff, updateProgress, us
 
       setForm({
         assignment_date: '',
+        completion_date: '',
         task_name: '',
         assigned_to: '',
         task_manager: '',
@@ -210,6 +199,7 @@ const Tasks = ({ staffs, managers, progresses, loggedInStaff, updateProgress, us
     setForm((prevForm) => ({
       ...prevForm,
       assignment_date: task.assignment_date || '',
+      completion_date: task.completion_date || '',
       task_name: task.task_name || '',
       assigned_to: task.assigned_to || '', // Make sure assigned_to is defined or use an empty string
       task_manager: task.task_manager || '',   // Make sure managed_by is defined or use an empty string
@@ -259,6 +249,7 @@ const Tasks = ({ staffs, managers, progresses, loggedInStaff, updateProgress, us
                 setEditingTaskId(null);
                 setForm({
                   assignment_date: '',
+                  completion_Date: '',
                   task_name: '',
                   assigned_to: '',
                   task_manager: '',
@@ -288,7 +279,7 @@ const Tasks = ({ staffs, managers, progresses, loggedInStaff, updateProgress, us
             {userType === 'admin' && (
             <div>
               <Form.Group controlId="formDateFrom">
-              <Form.Label>Date</Form.Label>
+              <Form.Label className='font-bold'>Assigned Date</Form.Label>
               <Form.Control
                 type='date'
                 name='assignment_date'
@@ -299,17 +290,31 @@ const Tasks = ({ staffs, managers, progresses, loggedInStaff, updateProgress, us
             </div>
             )}
             {userType === 'admin' && (
+            <div>
+              <Form.Group controlId="formDateTo">
+              <Form.Label className='font-bold'>Completion Date</Form.Label>
+              <Form.Control
+                type='date'
+                name='completion_date'
+                value={form.completion_date}
+                onChange={handleChange}
+              />
+             </Form.Group>
+            </div>
+            )}
+            {userType === 'admin' && (
               <div>
                 <Form.Group controlId="formTaskname">
-                  <Form.Label>Task Name</Form.Label>
+                  <Form.Label className='font-bold'>Task Name</Form.Label>
                   <Form.Control type="text" name="task_name" value={form.task_name} onChange={handleChange} />
                 </Form.Group>
               </div>
               )}
+
               {userType === 'admin' && (
               <div>
                 <Form.Group controlId="formAssigned">
-                  <Form.Label>Assigned To</Form.Label>
+                  <Form.Label className='font-bold'>Assigned To</Form.Label>
                   <Form.Control as="select" name="assigned_to" value={form.assigned_to} onChange={handleChange}>
                     <option value="">Select Staff</option>
                     {staffs &&
@@ -324,11 +329,11 @@ const Tasks = ({ staffs, managers, progresses, loggedInStaff, updateProgress, us
               </div>
               )}
             </div>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 gap-4 mt-2">
             {userType === 'admin' && (
               <div>
                 <Form.Group controlId="formManaged">
-                  <Form.Label>Task Manager</Form.Label>
+                  <Form.Label className='font-bold'>Task Manager</Form.Label>
                   <Form.Control as="select" name="task_manager" value={form.task_manager} onChange={handleChange}>
                     <option value="">Select Managers</option>
                     {managers &&
@@ -345,7 +350,7 @@ const Tasks = ({ staffs, managers, progresses, loggedInStaff, updateProgress, us
               {userType === 'admin' && (
               <div>
                 <Form.Group controlId="formManaged">
-                  <Form.Label>Project Manager</Form.Label>
+                  <Form.Label className='font-bold'>Project Manager</Form.Label>
                   <Form.Control as="select" name="project_manager" value={form.project_manager} onChange={handleChange}>
                     <option value="">Select Project Manager</option>
                     {managers &&
@@ -362,7 +367,7 @@ const Tasks = ({ staffs, managers, progresses, loggedInStaff, updateProgress, us
               {userType === 'admin' && (
               <div>
                 <Form.Group controlId="formManaged">
-                  <Form.Label>Project Name</Form.Label>
+                  <Form.Label className='font-bold'>Project Name</Form.Label>
                   <Form.Control as="select" name="project_name" value={form.project_name} onChange={handleChange}>
                     <option value="">Select Project</option>
                     {projects &&
@@ -376,17 +381,20 @@ const Tasks = ({ staffs, managers, progresses, loggedInStaff, updateProgress, us
                 </Form.Group>
               </div>
               )}
+              {userType === 'admin' && (
+              <div className='mt-2'>
+               <Form.Group controlId="formTaskDeadline">
+                 <Form.Label className='font-bold'>No. Of Days</Form.Label>
+                 <Form.Control type="text" name="task_deadline" value={form.task_deadline} onChange={handleChange} />
+               </Form.Group>
+              </div>
+            )}
             </div>
             {userType === 'admin' && (
-            <Form.Group controlId="formTaskDeadline">
-              <Form.Label>Task Limit</Form.Label>
-              <Form.Control type="text" name="task_deadline" value={form.task_deadline} onChange={handleChange} />
-            </Form.Group>
-            )}
-            {userType === 'admin' && (
-            <Form.Group controlId="avatar_image">
-              <Form.Label style={{ color: 'red' }}>Avatar File Attachment</Form.Label>
-              {form.avatarFiles && form.avatarFiles.length > 0 ? (
+              <div className='mt-2'>
+                <Form.Group controlId="avatar_image">
+                 <Form.Label className='font-bold' style={{ color: 'red' }}>Avatar File Attachment</Form.Label>
+                {form.avatarFiles && form.avatarFiles.length > 0 ? (
                 <div>
                   <a href={`${backendUrl}/tasks/${editingTaskId}/download_avatar`} download>
                     Download File
@@ -394,19 +402,21 @@ const Tasks = ({ staffs, managers, progresses, loggedInStaff, updateProgress, us
                   <div>{form.avatarFiles[0].name}</div>
                 </div>
               ) : (
-                <div {...getAvatarRootProps()} className="border-2 border-dashed border-gray-300 p-5">
+                <div {...getAvatarRootProps()} className="border-2 border-dashed border-gray-300 p-5 text-center">
                   <input {...getAvatarInputProps()} />
                   <p>Drag and drop files here or click to browse</p>
                   <Button variant="secondary" size="sm">
                     Attach File
                   </Button>
                 </div>
+             
               )}
             </Form.Group>
+             </div>
             )}
             {useType === 'staff' && (
               <Form.Group controlId="completed_files">
-              <Form.Label>Completed Files</Form.Label>
+              <Form.Label className='font-bold'>Completed Files</Form.Label>
               <div>
                 {form.completedFiles && form.completedFiles.length > 0 ? (
                   <div>
@@ -415,7 +425,7 @@ const Tasks = ({ staffs, managers, progresses, loggedInStaff, updateProgress, us
                     ))}
                   </div>
                 ) : (
-                  <div {...getCompletedFilesRootProps()} className="border-2 border-dashed border-gray-300 p-2">
+                  <div {...getCompletedFilesRootProps()} className="border-2 border-dashed border-gray-300 p-2 text-center">
                     <input {...getCompletedFilesInputProps()} />
                     <p>Drag and drop files here or click to browse</p>
                     <Button variant="secondary" size="sm">
@@ -426,9 +436,11 @@ const Tasks = ({ staffs, managers, progresses, loggedInStaff, updateProgress, us
               </div>
             </Form.Group>
             )}
-            <Button variant="primary" type="submit">
+           <div className="text-center">
+            <Button variant="primary" type="submit" className="mt-4 px-4 py-2">
               Submit
             </Button>
+          </div>
           </Form>
         </Modal.Body>
       </Modal>
@@ -438,7 +450,7 @@ const Tasks = ({ staffs, managers, progresses, loggedInStaff, updateProgress, us
             <h4>Select Task</h4>
             <div className="grid grid-cols-2 gap-2">
             {tasks.map((task) => (
-            <div
+             <div
               key={task.id}
               onClick={() => handleTaskCardClick(task.id)}
               className={`p-3 border rounded-lg cursor-pointer`}
@@ -448,13 +460,12 @@ const Tasks = ({ staffs, managers, progresses, loggedInStaff, updateProgress, us
             >
               Task {task.id}
             </div>
-          ))}
-
+            ))}
 
             </div>
             <div className="mt-3">
               <Link to="#" onClick={toggleProgress} className='text-xl font-bold no-underline hover:underline'>
-                Task Update
+                Task Progress Update
               </Link>
             </div>
             <div className="mt-3">
@@ -469,14 +480,15 @@ const Tasks = ({ staffs, managers, progresses, loggedInStaff, updateProgress, us
             <Table striped bordered hover style={{ width: '80%' }}>
               <thead>
                 <tr>
-                  <th>Date</th>
+                  <th>Assigned Date</th>
+                  <th>End Date</th>
                   <th>Task Name</th>
                   <th>Assigned To</th>
                   <th>Task Manager</th>
                   <th>Project Manager</th>
                   <th>Project Name</th>
-                  <th>Time Limit</th>
-                  <th>Tasks File Attachments</th>
+                  <th>Days Given</th>
+                  <th>Tasks Files</th>
                   <th>Completed Files Uploads</th>
                   {userType === 'admin' && <th>Action</th>}
                 </tr>
@@ -485,6 +497,7 @@ const Tasks = ({ staffs, managers, progresses, loggedInStaff, updateProgress, us
                 {getSelectedTaskData() && (
                   <tr key={getSelectedTaskData().id}>
                     <td>{getSelectedTaskData().assignment_date}</td>
+                    <td>{getSelectedTaskData().completion_date}</td>
                     <td>{getSelectedTaskData().task_name}</td>
                     <td>{getSelectedTaskData().assigned_to}</td>
                     <td>{getSelectedTaskData().task_manager}</td>
@@ -538,9 +551,9 @@ const Tasks = ({ staffs, managers, progresses, loggedInStaff, updateProgress, us
                       )}
                     </td>
                     <td>
-                      <div style={{ display: 'flex', gap: '8px' }}>
+                      <div className='mb-2'>
                         {userType === 'admin' ? (
-                          <Button variant="primary" onClick={() => handleEdit(getSelectedTaskData())}>
+                          <Button className='mb-2' variant="primary" onClick={() => handleEdit(getSelectedTaskData())}>
                            Edit
                           </Button>
                         ) : (
@@ -572,12 +585,14 @@ const Tasks = ({ staffs, managers, progresses, loggedInStaff, updateProgress, us
               updateProgress={updateProgress}
               handleUpdateProgress={handleUpdateProgress}
               loggedInStaff={loggedInStaff}
+              tasks={tasks}
             />
           )}
         </div>
         <div className={`w-full ${showRequests ? '' : 'hidden'}`}>
           {showRequests && (
             <Request
+              tasks={tasks}
               userType={userType}
               useType={useType}
               managers={managers}

@@ -911,6 +911,7 @@ function AdminDashboard({ staffs, setLoggedInManager, setIsCheckedIn, setIsCheck
             path="/requests"
             element={
               <Request
+                tasks={tasks}
                 userType={userType}
                 requests={requests}
                 managers={managers}
@@ -924,6 +925,7 @@ function AdminDashboard({ staffs, setLoggedInManager, setIsCheckedIn, setIsCheck
             path="/progresses"
             element={
               <TaskProgress
+                tasks={tasks}
                 userType={useType}
                 progresses={progresses}
                 updateProgress={updateProgress}

@@ -4,7 +4,7 @@ import { Button, Modal, Alert, Form } from 'react-bootstrap';
 import { OmsContext } from '../components/auth/AuthContext';
 import axios from 'axios';
 
-function Request({ handleUpdateRequest, requests, loggedInStaff, managers, dashboardType, useType, userType, deleteRequest }) {
+function Request({ handleUpdateRequest, requests, tasks, loggedInStaff, managers, dashboardType, useType, userType, deleteRequest }) {
   const [show, setShow] = useState(false);
   const [editMode, setEditMode] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
@@ -12,6 +12,7 @@ function Request({ handleUpdateRequest, requests, loggedInStaff, managers, dashb
   const {backendUrl} = useContext(OmsContext);
   const [formData, setFormData] = useState({
     request_by: loggedInStaff,
+    task_request: '',
     request_detail: '',
     request_date: '',
     request_to: '',
@@ -22,6 +23,7 @@ function Request({ handleUpdateRequest, requests, loggedInStaff, managers, dashb
     setEditMode(false);
     setFormData({
         request_by: '',
+        task_request: '',
         request_detail: '',
         request_date: '',
         request_to: '',
@@ -79,6 +81,7 @@ function Request({ handleUpdateRequest, requests, loggedInStaff, managers, dashb
     setEditRequestId(request.id);
     setFormData({
         request_by: request.request_by,
+        request_task: request.task_request,
         request_detail: request.request_detail,
         request_date: request.request_date,
         request_to:  request.request_to,
@@ -129,6 +132,7 @@ function Request({ handleUpdateRequest, requests, loggedInStaff, managers, dashb
               <thead>
                 <tr>
                   <th>Staff Name</th>
+                  <th>Task Name</th>
                   <th>Request Detail</th>
                   <th>Request Date</th>
                   <th>Request To</th>
@@ -140,6 +144,7 @@ function Request({ handleUpdateRequest, requests, loggedInStaff, managers, dashb
                   requests.map((request) => (
                     <tr key={request.id}>
                       <td>{request.request_by}</td>
+                      <td>{request.task_request}</td>
                       <td>{request.request_detail}</td>
                       <td>{request.request_date}</td>
                       <td>{request.request_to}</td>
@@ -174,7 +179,7 @@ function Request({ handleUpdateRequest, requests, loggedInStaff, managers, dashb
               <form onSubmit={handleSubmit}>
                 <div>
                 <Form.Group controlId='formRequestBy'>
-                 <Form.Label>Staff Name</Form.Label>
+                 <Form.Label className='font-bold'>Staff Name</Form.Label>
                  <Form.Control as='select' name='request_by' value={loggedInStaff} onChange={handleChange}>
                     <option value={loggedInStaff}>
                      {loggedInStaff}
@@ -182,6 +187,26 @@ function Request({ handleUpdateRequest, requests, loggedInStaff, managers, dashb
                  </Form.Control>
                 </Form.Group>
                 </div>
+                <div className="form-group mt-3">
+                  <label htmlFor="task_request" className="font-bold">
+                    Task Name
+                  </label>
+                  <select 
+                    className="form-control"
+                    name="task_request"
+                    id="task_request"
+                    value={formData.task_request}
+                    onChange={handleChange}
+                  >
+                   <option value="">Task Name</option>
+                    {tasks && Array.isArray(tasks) && tasks.filter((task) => task.assigned_to === loggedInStaff).map((task) => (
+                    <option key={task.id} value={task.task_name}>
+                      {task.task_name}
+                    </option>
+                    ))}
+                    </select>
+                </div>
+
                 <div className="form-group mt-3">
                   <label className="font-bold">Request Detail</label>
                   <input
@@ -218,15 +243,16 @@ function Request({ handleUpdateRequest, requests, loggedInStaff, managers, dashb
                       Array.isArray(managers) &&
                       managers.map((manager) => (
                         <option key={manager.id} value={manager.f_name}>
-                          {manager.f_name} {manager.l_name} - {manager.title}
+                          {manager.f_name} {manager.l_name} - {manager.managers_title}
                         </option>
                       ))}
                   </select>
                 </div>
-
-                <button type="submit" className="btn btn-success mt-4">
-                  {editMode ? 'Update Request' : 'Apply Special Request'}
-                </button>
+                <div className="text-center">
+                  <button type="submit" className="btn btn-success mt-4">
+                    {editMode ? 'Update Request' : 'Apply Special Request'}
+                  </button>
+                </div>
               </form>
             </Modal.Body>
 
