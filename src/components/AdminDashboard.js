@@ -998,6 +998,7 @@ function AdminDashboard({ staffs, setLoggedInManager, setIsCheckedIn, setIsCheck
             path="/start-timesheet"
             element={
               <StartTimesheet
+                managers={managers}
                 tasks={tasks}
                 timesheets={timesheets}
                 updateSheet={updateSheet}

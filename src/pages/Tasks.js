@@ -23,6 +23,7 @@ const Tasks = ({ staffs, managers, progresses, loggedInStaff, updateProgress, us
     task_deadline: '',
     avatarFiles: [],
     completedFiles: [],
+    isComplete: 'Not Started',
   });
 
   const { backendUrl } = useContext(OmsContext);
@@ -81,21 +82,7 @@ const Tasks = ({ staffs, managers, progresses, loggedInStaff, updateProgress, us
     }));
   };
 
-  useEffect(() => {
-    const assignmentDate = new Date(form.assignment_date);
-    const completionDate = new Date(form.completion_date);
-    
-    if (!isNaN(assignmentDate) && !isNaN(completionDate)) {
-      const timeDifference = completionDate - assignmentDate;
-      const daysDifference = Math.ceil(timeDifference / (1000 * 3600 * 24));
-      setForm((prevData) => ({
-        ...prevData,
-        task_deadline: daysDifference.toString(),
-      }));
-    }
-  }, [form.assignment_date, form.completion_date]);
-
-  const handleDrop = (acceptedFiles, field) => {
+    const handleDrop = (acceptedFiles, field) => {
     setForm((prevData) => ({
       ...prevData,
       [field]: acceptedFiles,
@@ -139,34 +126,46 @@ const Tasks = ({ staffs, managers, progresses, loggedInStaff, updateProgress, us
       formData.append('project_manager', form.project_manager);
       formData.append('project_name', form.project_name);
       formData.append('task_deadline', form.task_deadline);
-
+  
+      // Only add isComplete if the user is not an admin
+      if (userType !== 'admin') {
+        formData.append('isComplete', form.isComplete);
+      }
+  
       form.avatarFiles.forEach((file) => {
         formData.append('avatar_image', file);
       });
-
+  
       form.completedFiles.forEach((file) => {
         formData.append('completed_files[]', file);
       });
-
+  
       const method = editingTaskId ? 'put' : 'post';
       const endpoint = editingTaskId
         ? `${backendUrl}/tasks/${editingTaskId}/upload_completed_files`
         : `${backendUrl}/tasks`;
-
+  
       const taskConfig = {
         headers: {
           'Content-Type': 'multipart/form-data',
           Authorization: `Bearer ${token}`,
         },
       };
-
+  
       const response = await axios[method](endpoint, formData, taskConfig);
       console.log('Task created/updated successfully!', response.data);
-
+  
+      if (!editingTaskId) {
+        setForm((prevData) => ({
+          ...prevData,
+          status: 'Not Started',
+        }));
+      }
+  
       if (editingTaskId) {
         // Find the index of the edited task in the tasks array
         const editedTaskIndex = tasks.findIndex((task) => task.id === response.data.id);
-
+  
         // Update the tasks array with the new task information
         setTasks((prevTasks) => {
           const updatedTasks = [...prevTasks];
@@ -177,7 +176,7 @@ const Tasks = ({ staffs, managers, progresses, loggedInStaff, updateProgress, us
         // Add the newly created task to the tasks array
         setTasks((prevTasks) => [...prevTasks, response.data]);
       }
-
+  
       setForm({
         assignment_date: '',
         completion_date: '',
@@ -194,6 +193,51 @@ const Tasks = ({ staffs, managers, progresses, loggedInStaff, updateProgress, us
       console.error('Error creating/updating task:', error);
     }
   };
+  
+  const handleTaskStatusChange = (taskId) => {
+    // Find the task in the tasks array
+    const taskToUpdate = tasks.find((task) => task.id === taskId);
+
+    if (taskToUpdate) {
+      // Define the possible status values: 'Not Started', 'In Progress', 'Complete'
+      const statusValues = ['Not Started', 'In Progress', 'Completed Task'];
+
+      // Find the current status index
+      const currentStatusIndex = statusValues.indexOf(taskToUpdate.isComplete);
+
+      // Calculate the next status index (cycling through the values)
+      const nextStatusIndex = (currentStatusIndex + 1) % statusValues.length;
+
+      // Update the status for the specific task
+      taskToUpdate.isComplete = statusValues[nextStatusIndex];
+
+      // Update the tasks array with the updated task
+      setTasks((prevTasks) => {
+        const updatedTasks = prevTasks.map((task) =>
+          task.id === taskId ? taskToUpdate : task
+        );
+        return updatedTasks;
+      });
+
+      // Store the updated status in local storage
+      localStorage.setItem(`taskStatus_${taskId}`, taskToUpdate.isComplete);
+    }
+  };
+
+  useEffect(() => {
+    // When the component mounts, initialize the selected task
+    if (tasks && tasks.length > 0) {
+      setSelectedTask(tasks[0].id);
+    }
+
+    // Retrieve task statuses from local storage and update the tasks array
+    tasks.forEach((task) => {
+      const storedStatus = localStorage.getItem(`taskStatus_${task.id}`);
+      if (storedStatus) {
+        task.isComplete = storedStatus;
+      }
+    });
+  }, [tasks]);
 
   const handleEdit = (task) => {
     setForm((prevForm) => ({
@@ -235,7 +279,7 @@ const Tasks = ({ staffs, managers, progresses, loggedInStaff, updateProgress, us
   };
 
   return (
-    <div className="container mx-auto bg-white rounded-lg shadow-lg ml-8 pt-3 pb-8">
+    <div className="container mx-auto bg-white rounded-lg shadow-lg ml-8 p-10">
       <div className="flex justify-between mb-5">
         <div className="text-center text-green">
           <h3>Tasks</h3>
@@ -389,6 +433,32 @@ const Tasks = ({ staffs, managers, progresses, loggedInStaff, updateProgress, us
                </Form.Group>
               </div>
             )}
+            
+            {userType === 'staff' && (
+            <div>
+              <Form.Group controlId="formIsComplete">
+                <Form.Label className='font-bold'>Task Status</Form.Label>
+                <div>
+                  <Button variant={form.isComplete === 'Not Started' ? 'danger' : 'secondary'}
+                   onClick={() => handleChange({ target: { name: 'isComplete', value: 'Not Started' } })}
+                  >
+                    Not Started
+                  </Button>
+                  <Button variant={form.isComplete === 'In Progress' ? 'primary' : 'secondary'}
+                   onClick={() => handleChange({ target: { name: 'isComplete', value: 'In Progress' } })}
+                   >
+                    In Progress
+                  </Button>
+                  <Button variant={form.isComplete === 'Completed Task' ? 'primary' : 'secondary'}
+                   onClick={() => handleChange({ target: { name: 'isComplete', value: 'Completed Task' } })}
+                   >
+                    Completed Task
+                  </Button>
+                </div>
+              </Form.Group>
+              </div>
+              )}
+
             </div>
             {userType === 'admin' && (
               <div className='mt-2'>
@@ -489,7 +559,8 @@ const Tasks = ({ staffs, managers, progresses, loggedInStaff, updateProgress, us
                   <th>Project Name</th>
                   <th>Days Given</th>
                   <th>Tasks Files</th>
-                  <th>Completed Files Uploads</th>
+                  <th>Completed Files</th>
+                  <th>Status</th>
                   {userType === 'admin' && <th>Action</th>}
                 </tr>
               </thead>
@@ -549,6 +620,25 @@ const Tasks = ({ staffs, managers, progresses, loggedInStaff, updateProgress, us
                           </Button>
                         </div>
                       )}
+                    </td>
+                    <td>
+                      {getSelectedTaskData() && (
+                      <Button variant={
+                        getSelectedTaskData().isComplete === 'Not Started'
+                        ? 'danger' : getSelectedTaskData().isComplete === 'In Progress'
+                        ? 'warning'
+                        : 'success'
+                      }
+                      onClick={() => {
+                        if (useType === 'staff') {
+                          handleTaskStatusChange(getSelectedTaskData().id);
+                        }
+                      }}
+                      disabled={userType === 'admin'} // Disable the button for admins
+                      >
+                        {getSelectedTaskData().isComplete}
+                        </Button>
+                        )}
                     </td>
                     <td>
                       <div className='mb-2'>

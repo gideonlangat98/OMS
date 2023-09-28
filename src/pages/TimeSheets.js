@@ -37,6 +37,8 @@ const Timesheets = () => {
       if (existingTimesheet) {
         existingTimesheet.end_time = timesheet.end_time;
         existingTimesheet.progress_details = timesheet.progress_details;
+        existingTimesheet.issues_sorted = timesheet.issues_sorted;
+        existingTimesheet.assisted_by = timesheet.assisted_by;
       } else {
         combinedTimesheets.push({ ...timesheet });
       }
@@ -72,7 +74,6 @@ const Timesheets = () => {
           </div>
         </div>
 
-        {/* Table to display combined timesheet entries */}
         <Table striped bordered hover>
           <thead>
             <tr>
@@ -81,7 +82,13 @@ const Timesheets = () => {
               <th>End Time</th>
               <th>Task to do</th>
               <th>Progress Details</th>
-              <th>Time Limit for the Task</th>
+              <th>Time Limit</th>
+              <th>Request For</th>
+              <th>Request To</th>
+              <th>Description</th>
+              <th>Request On</th>
+              <th>Sorted By</th>
+              <th>Agenda</th>
               <th>Action</th>
             </tr>
           </thead>
@@ -94,6 +101,12 @@ const Timesheets = () => {
                 <td>{timesheet.task_detail}</td>
                 <td>{timesheet.progress_details || '-'}</td>
                 <td>{timesheet.time_limit}</td>
+                <td>{timesheet.addressed_issue}</td>
+                 <td>{timesheet.sorted_by}</td>
+                <td>{timesheet.task_stuffs}</td>
+                <td>{timesheet.issues_sorted}</td>
+                <td>{timesheet.sorted_by}</td>
+                <td>{timesheet.issues_discussed}</td>
                 <td>
                   <Button
                     onClick={() => handleDelete(timesheet.id)}

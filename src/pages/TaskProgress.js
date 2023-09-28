@@ -4,7 +4,7 @@ import { Button, Modal, Alert, Form, Row, Col } from 'react-bootstrap';
 import { OmsContext } from '../components/auth/AuthContext';
 import axios from 'axios';
 
-function TaskProgress({ handleUpdateProgress, tasks, useType, loggedInStaff, userType, progresses, managers, deleteProgress }) {
+function TaskProgress({ handleUpdateProgress, updateProgress, tasks, useType, loggedInStaff, userType, progresses, managers, deleteProgress }) {
   const [show, setShow] = useState(false);
   const [editMode, setEditMode] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
@@ -82,7 +82,7 @@ function TaskProgress({ handleUpdateProgress, tasks, useType, loggedInStaff, use
         .then(function (response) {
           if (response.status === 200) {
             const updatedProgress = response.data;
-            handleUpdateProgress(updatedProgress);
+            updateProgress(updatedProgress);
             handleClose();
           } else {
             throw new Error(`Network response was not ok. Response status: ${response.status}`);

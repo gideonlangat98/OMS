@@ -136,28 +136,18 @@ function StDashboard({ staffs, setStaffs, isStaff, isCheckedIn, isCheckedOut, se
     }
   }
 
-  // Perform update operation on staffs
-  async function updateProgress(id, newData) {
-    try {
-      const token = localStorage.getItem('token');
-      await axios.put(`${backendUrl}/progresses/${id}`, newData, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      });
-      const updatedProgresses = progresses.map((progress) => {
-        if (progress.id === id) {
-          return { ...progress, ...newData };
-        }
-        return progress;
-      });
-      setProgresses(updatedProgresses);
-    } catch (error) {
-      console.error('Error updating data:', error);
-    }
+  // Perform update operation on Progresses
+  const updateProgress = (updatedProgress) => {
+    const updatedProgresses = progresses.map((progress) => {
+      if(progress.id === updatedProgress.id) {
+        return updatedProgress;
+      }
+      return progress;
+    })
+    setProgresses(updatedProgresses)
   }
 
-  // Perform delete operation on staffs
+  // Perform delete operation on Progresses
   async function deleteProgress(id) {
     try {
       const token = localStorage.getItem('token');
@@ -206,24 +196,14 @@ function StDashboard({ staffs, setStaffs, isStaff, isCheckedIn, isCheckedOut, se
   }
 
   // Perform update operation on staffs
-  async function updateRequest(id, newData) {
-    try {
-      const token = localStorage.getItem('token');
-      await axios.put(`${backendUrl}/requests/${id}`, newData, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      });
-      const updatedRequests = requests.map((request) => {
-        if (request.id === id) {
-          return { ...request, ...newData };
-        }
-        return request;
-      });
-      setRequests(updatedRequests);
-    } catch (error) {
-      console.error('Error updating data:', error);
-    }
+  const updateRequest = (updatedRequest) => {
+    const updatedRequests = requests.map((request) => {
+      if(request.id === updatedRequest.id) {
+        return updatedRequest;
+      }
+      return request;
+    })
+    setRequests(updatedRequests)
   }
 
   // Perform delete operation on staffs
@@ -758,6 +738,7 @@ function StDashboard({ staffs, setStaffs, isStaff, isCheckedIn, isCheckedOut, se
             element={
               <StartTimesheet
                 tasks={tasks}
+                managers={managers}
                 timesheets={timesheets}
                 updateSheet={updateSheet}
                 deleteData={deleteData}

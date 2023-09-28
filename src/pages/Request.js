@@ -4,7 +4,7 @@ import { Button, Modal, Alert, Form } from 'react-bootstrap';
 import { OmsContext } from '../components/auth/AuthContext';
 import axios from 'axios';
 
-function Request({ handleUpdateRequest, requests, tasks, loggedInStaff, managers, dashboardType, useType, userType, deleteRequest }) {
+function Request({ handleUpdateRequest, updateRequest, requests, tasks, loggedInStaff, managers, dashboardType, useType, userType, deleteRequest }) {
   const [show, setShow] = useState(false);
   const [editMode, setEditMode] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
@@ -45,7 +45,7 @@ function Request({ handleUpdateRequest, requests, tasks, loggedInStaff, managers
         .then(function (response) {
           if (response.status === 200) {
             const updatedRequest = response.data;
-            handleUpdateRequest(updatedRequest);
+            updateRequest(updatedRequest);
             handleClose();
           } else {
             throw new Error(`Network response was not ok. Response status: ${response.status}`);
