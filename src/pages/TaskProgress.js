@@ -252,9 +252,7 @@ function TaskProgress({ handleUpdateProgress, updateProgress, tasks, useType, lo
                       </Form.Control>
                     </Form.Group>
                   </Col>
-                  
-                </Row>
-                <Row>
+
                   <Col sm={6}>
                     <div className="form-group mt-3">
                       <label className="font-bold">Task Name</label>
@@ -270,6 +268,9 @@ function TaskProgress({ handleUpdateProgress, updateProgress, tasks, useType, lo
                       </select>
                     </div>
                   </Col>
+                  
+                </Row>
+                <Row>
                   <Col sm={6}>
                     <Form.Group controlId="formManaged">
                       <Form.Label className="font-bold">Task Manager</Form.Label>
@@ -279,7 +280,7 @@ function TaskProgress({ handleUpdateProgress, updateProgress, tasks, useType, lo
                           Array.isArray(managers) &&
                           managers.map((manager) => (
                             <option key={manager.id} value={manager.f_name}>
-                              ID: {manager.id} - Name: {manager.f_name} {manager.l_name} - {manager.managers_title}
+                              {manager.f_name} - {manager.managers_title}
                             </option>
                           ))}
                       </Form.Control>
@@ -299,7 +300,7 @@ function TaskProgress({ handleUpdateProgress, updateProgress, tasks, useType, lo
                           Array.isArray(managers) &&
                           managers.map((manager) => (
                             <option key={manager.id} value={manager.f_name}>
-                              ID: {manager.id} - Name: {manager.f_name} {manager.l_name} - {manager.managers_title}
+                              {manager.f_name} - {manager.managers_title}
                             </option>
                           ))}
                       </Form.Control>

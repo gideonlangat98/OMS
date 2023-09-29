@@ -206,6 +206,17 @@ function Request({ handleUpdateRequest, updateRequest, requests, tasks, loggedIn
                     ))}
                     </select>
                 </div>
+                  <div className="form-group mt-3">
+                  <label className="font-bold">Request Date</label>
+                  <input
+                    type="date"
+                    className="form-control"
+                    name="request_date"
+                    placeholder="Enter Request Date"
+                    value={formData.request_date}
+                    onChange={handleChange}
+                  />
+                </div>
 
                 <div className="form-group mt-3">
                   <label className="font-bold">Request Detail</label>
@@ -215,17 +226,6 @@ function Request({ handleUpdateRequest, updateRequest, requests, tasks, loggedIn
                     name="request_detail"
                     placeholder="Enter Request Detail"
                     value={formData.request_detail}
-                    onChange={handleChange}
-                  />
-                </div>
-                <div className="form-group mt-3">
-                  <label className="font-bold">Request Date</label>
-                  <input
-                    type="date"
-                    className="form-control"
-                    name="request_date"
-                    placeholder="Enter Request Date"
-                    value={formData.request_date}
                     onChange={handleChange}
                   />
                 </div>

@@ -278,12 +278,41 @@ const Tasks = ({ staffs, managers, progresses, loggedInStaff, updateProgress, us
     link.remove();
   };
 
+  useEffect(() => {
+    const assignmentDate = new Date(form.assignment_date);
+    const completionDate = new Date(form.completion_date);
+
+    if (!isNaN(assignmentDate) && !isNaN(completionDate)) {
+      const timeDifference = completionDate - assignmentDate;
+      const daysDifference = Math.ceil(timeDifference / (1000 * 3600 * 24));
+      setForm((prevData) => ({
+        ...prevData,
+        task_deadline: daysDifference.toString(),
+      }));
+    }
+  }, [form.assignment_date, form.completion_date]);
+
   return (
-    <div className="container mx-auto bg-white rounded-lg shadow-lg ml-8 p-10">
+    <div className="container max-width bg-white rounded-lg shadow-lg p-6 pr-6">
       <div className="flex justify-between mb-5">
         <div className="text-center text-green">
           <h3>Tasks</h3>
         </div>
+        <div className="grid grid-cols-6 gap-2 mt-4">
+            {tasks.map((task) => (
+             <div
+              key={task.id}
+              onClick={() => handleTaskCardClick(task.id)}
+              className={`p-3 border rounded-lg cursor-pointer`}
+              style={{
+                backgroundColor: taskColors[task.id],
+              }}
+            >
+              Task {task.id}
+            </div>
+            ))}
+
+            </div>
         <div>
           {userType === 'admin' && (
             <Button
@@ -514,25 +543,10 @@ const Tasks = ({ staffs, managers, progresses, loggedInStaff, updateProgress, us
           </Form>
         </Modal.Body>
       </Modal>
-      <div className="flex">
-      <div className="w-1/2 pr-16">
+      <div className='flex'>
+      <div className="w-1/4 pr-4">
           <div className="mb-3">
-            <h4>Select Task</h4>
-            <div className="grid grid-cols-2 gap-2">
-            {tasks.map((task) => (
-             <div
-              key={task.id}
-              onClick={() => handleTaskCardClick(task.id)}
-              className={`p-3 border rounded-lg cursor-pointer`}
-              style={{
-                backgroundColor: taskColors[task.id] || 'transparent',
-              }}
-            >
-              Task {task.id}
-            </div>
-            ))}
-
-            </div>
+            <h4>Menu</h4>
             <div className="mt-3">
               <Link to="#" onClick={toggleProgress} className='text-xl font-bold no-underline hover:underline'>
                 Task Progress Update
