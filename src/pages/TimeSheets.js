@@ -102,7 +102,7 @@ const Timesheets = () => {
                 <td>{timesheet.progress_details || '-'}</td>
                 <td>{timesheet.time_limit}</td>
                 <td>{timesheet.addressed_issue}</td>
-                 <td>{timesheet.sorted_by}</td>
+                <td>{timesheet.sorted_by}</td>
                 <td>{timesheet.task_stuffs}</td>
                 <td>{timesheet.issues_sorted}</td>
                 <td>{timesheet.sorted_by}</td>

@@ -84,7 +84,7 @@ function StaffDashboard({
       <h2 className="text-3xl font-bold text-gray-800 mb-4">Dashboard Overview</h2>
       {!showChat && !showProjectsCard && !showTasksCard && !showTimeSheetCard && !showLeaveFormCard && !showHistoryCard && (
        <div className="grid grid-cols-3 gap-4">
-        <div className="cursor-pointer dashboard-card bg-indigo-500" onClick={() => handleCardsClick('projects')}>
+        <div className="cursor-pointer dashboard-card rounded-md bg-indigo-500" onClick={() => handleCardsClick('projects')}>
           <div className="p-4 rounded-lg shadow-md dark:bg-gray-800">
             <div className='flex justify-between'>
               <FaTasks size={25} className="text-lg font-medium mb-2" />
@@ -98,7 +98,7 @@ function StaffDashboard({
   onClick={() => {
     handleCardsClick('tasks');
   }}>
-  <div className="p-4 rounded-lg shadow-md dark:bg-gray-800 relative">
+  <div className="p-4 rounded-lg shadow-md rounded-md dark:bg-gray-800 relative">
     <div className='flex justify-between'>
       <FaTasks size={25} className="text-lg font-medium mb-2" />
       <h4 className="text-lg text-xl font-medium mb-2">Tasks</h4>
@@ -108,7 +108,7 @@ function StaffDashboard({
 </div>
 
 
-      <div className="cursor-pointer dashboard-card bg-red-500" onClick={() => handleCardsClick('timesheets')}>
+      <div className="cursor-pointer dashboard-card rounded-md bg-red-500" onClick={() => handleCardsClick('timesheets')}>
         <div className="p-4 rounded-lg shadow-md dark:bg-gray-800">
           <div className='flex justify-between'>
             <FaClock size={25} className="text-lg font-medium mb-2" />
@@ -118,7 +118,7 @@ function StaffDashboard({
         </div>
       </div>
 
-    <div className="cursor-pointer dashboard-card bg-yellow-300" onClick={() => handleCardsClick('forms')}>
+    <div className="cursor-pointer dashboard-card rounded-md bg-yellow-300" onClick={() => handleCardsClick('forms')}>
       <div className="p-4 rounded-lg shadow-md dark:bg-gray-800">
         <div className='flex justify-between'>
             <FaRegFileAlt size={25} className="text-lg font-medium mb-2" />
@@ -129,7 +129,7 @@ function StaffDashboard({
     </div>
 
     
-    <div className="cursor-pointer dashboard-card bg-red-400" onClick={() => handleCardsClick('history')}>
+    <div className="cursor-pointer dashboard-card rounded-md bg-red-400" onClick={() => handleCardsClick('history')}>
         <div className="p-4 rounded-lg shadow-md dark:bg-gray-800">
           <div className='flex justify-between'>
             <FaRegFileAlt size={25} className="text-lg font-medium mb-2" />
@@ -145,7 +145,7 @@ function StaffDashboard({
       handleCardsClick('chat');
     }}
     >
-    <div className="relative p-4 rounded-lg shadow-md dark:bg-gray-800">
+    <div className="relative p-4 rounded-lg rounded-md shadow-md dark:bg-gray-800">
         <div className='flex justify-between'>
             <FaInbox size={25} className="text-lg font-medium mb-2" />
             <h4 className="text-lg text-xl font-medium mb-2">Inbox</h4>

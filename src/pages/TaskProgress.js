@@ -198,6 +198,7 @@ function TaskProgress({ handleUpdateProgress, updateProgress, tasks, useType, lo
                   <th>Expected Completion Date</th>
                   <th>Delivery Date</th>
                   <th>Exceeded By</th>
+                  <th>Action</th>
                 </tr>
               </thead>
               <tbody>

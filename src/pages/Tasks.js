@@ -200,7 +200,7 @@ const Tasks = ({ staffs, managers, progresses, loggedInStaff, updateProgress, us
 
     if (taskToUpdate) {
       // Define the possible status values: 'Not Started', 'In Progress', 'Complete'
-      const statusValues = ['Not Started', 'In Progress', 'Completed Task'];
+      const statusValues = ['Not Started', 'In Progress', 'Done'];
 
       // Find the current status index
       const currentStatusIndex = statusValues.indexOf(taskToUpdate.isComplete);
@@ -293,7 +293,7 @@ const Tasks = ({ staffs, managers, progresses, loggedInStaff, updateProgress, us
   }, [form.assignment_date, form.completion_date]);
 
   return (
-    <div className="container max-width bg-white rounded-lg shadow-lg p-6 pr-6">
+    <div style={{overflow: "hidden"}} className="container bg-white rounded-lg shadow-lg p-6 pr-6">
       <div className="flex justify-between mb-5">
         <div className="text-center text-green">
           <h3>Tasks</h3>
@@ -561,7 +561,7 @@ const Tasks = ({ staffs, managers, progresses, loggedInStaff, updateProgress, us
         </div>
         <div className={`w-full ${showTasksTable ? '' : 'hidden'}`}>
           {selectedTask !== null && (
-            <Table striped bordered hover style={{ width: '80%' }}>
+            <Table striped bordered hover style={{ width: '60%' }}>
               <thead>
                 <tr>
                   <th>Assigned Date</th>
@@ -575,6 +575,7 @@ const Tasks = ({ staffs, managers, progresses, loggedInStaff, updateProgress, us
                   <th>Tasks Files</th>
                   <th>Completed Files</th>
                   <th>Status</th>
+                  <th>File Uploads</th>
                   {userType === 'admin' && <th>Action</th>}
                 </tr>
               </thead>

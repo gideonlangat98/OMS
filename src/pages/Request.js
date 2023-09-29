@@ -136,6 +136,7 @@ function Request({ handleUpdateRequest, updateRequest, requests, tasks, loggedIn
                   <th>Request Detail</th>
                   <th>Request Date</th>
                   <th>Request To</th>
+                  <th>Action</th>
                 </tr>
               </thead>
               <tbody>
