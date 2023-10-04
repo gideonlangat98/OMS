@@ -43,6 +43,8 @@ function AdminDashboard({ staffs, setLoggedInManager, setIsCheckedIn, setIsCheck
   const [progresses, setProgresses] = useState([]);
   const [check_in_outs, setCheckInOuts] = useState([]);
   const [unreadMessageCount, setUnreadMessageCount] = useState(0);
+  const [unreadProgressCount, setUnreadProgressCount] = useState(0);
+  const [progresId, setProgresId] = useState('')
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -126,6 +128,9 @@ function AdminDashboard({ staffs, setLoggedInManager, setIsCheckedIn, setIsCheck
     }
   }, []);
 
+  const resetUnreadProgressCount = () => {
+    setUnreadProgressCount(0);
+  };
 
   useEffect(() => {
     localStorage.setItem('progresses', JSON.stringify(progresses));
@@ -133,18 +138,33 @@ function AdminDashboard({ staffs, setLoggedInManager, setIsCheckedIn, setIsCheck
 
   async function fetchProgresses() {
     try {
-      const token = localStorage.getItem('token');
-      const response = await axios.get(`${backendUrl}/progresses`, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      });
-      const data = response.data;
-      setProgresses(data);
-    } catch (error) {
-      console.log(error);
+        const progresId = localStorage.getItem('progresId');
+        localStorage.setItem('progresId', progresId);
+        const response = await axios.get(`${backendUrl}/progresses/received_progresses?progress_id=${progresId}`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
+        });
+
+        const newReceivedProgresses = response.data;
+        const progressIds = newReceivedProgresses.reduce((maxProgress, progress) => {
+          return progress.id > maxProgress.id ? progress: maxProgress;
+        }, {id: -1});
+
+        console.log(progressIds.id);
+
+
+        // Calculate the number of unread progress items
+        const unreadCount = newReceivedProgresses.filter((progress) => !progress.seen).length;
+
+        // Update received progress updates and unread progress count
+        setProgresId(progressIds.id)
+        setProgresses(newReceivedProgresses);
+        setUnreadProgressCount(unreadCount);
+      } catch (error) {
+        console.error('Error fetching received progresses:', error);
+      }
     }
-  }
 
   // Perform update operation on staffs
   async function updateProgress(id, newData) {
@@ -185,6 +205,14 @@ function AdminDashboard({ staffs, setLoggedInManager, setIsCheckedIn, setIsCheck
   function handleUpdateProgress(newProgress) {
     setProgresses([...progresses, newProgress])
   }
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      fetchProgresses(true); // Fetch for logged-in users
+    } else {
+      fetchProgresses(false); // Fetch for logged-out users
+    }
+  }, [isLoggedIn]);  
 
   //Fetch Requests
 
@@ -844,13 +872,13 @@ function AdminDashboard({ staffs, setLoggedInManager, setIsCheckedIn, setIsCheck
 
   return (
     <div>
-      <Navbar updateLoggedIn={updateLoggedIn} setIsCheckedIn={setIsCheckedIn} setIsCheckedOut={setIsCheckedOut} userType={userType} setLoggedInStaff={setLoggedInStaff} setLoggedInManager={setLoggedInManager} />
-      <AdminLayout updateLoggedIn={updateLoggedIn} unreadMessageCount={unreadMessageCount} >
+      <Navbar updateLoggedIn={updateLoggedIn} unreadProgressCount={unreadProgressCount} setUnreadProgressCount={setUnreadProgressCount} setIsCheckedIn={setIsCheckedIn} setIsCheckedOut={setIsCheckedOut} userType={userType} setLoggedInStaff={setLoggedInStaff} setLoggedInManager={setLoggedInManager} />
+      <AdminLayout updateLoggedIn={updateLoggedIn} unreadProgressCount={unreadProgressCount} setUnreadProgressCount={setUnreadProgressCount} unreadMessageCount={unreadMessageCount} >
         <Routes>
           <Route path="/" element={<Navigate to="/admindashboard/dashboard" />} />
           <Route
             path="/tasks"
-            element={<Tasks tasks={tasks} requests={requests} updateRequest={updateRequest} deleteRequest={deleteRequest} handleUpdateRequest={handleUpdateRequest} progresses={progresses} updateProgress={updateProgress} deleteProgress={deleteProgress} handleUpdateProgress={handleUpdateProgress} setTasks={setTasks} projects={projects} userType={userType} stafId={localStorage.getItem('stafId')} staffs={staffs} managers={managers} deleteTask={handleDelete} />}
+            element={<Tasks tasks={tasks} progresId={progresId} progressId={localStorage.getItem('progressId')} setProgresses={setProgresses} unreadProgressCount={unreadProgressCount} requests={requests} setUnreadProgressCount={setUnreadProgressCount} updateRequest={updateRequest} deleteRequest={deleteRequest} handleUpdateRequest={handleUpdateRequest} progresses={progresses} updateProgress={updateProgress} deleteProgress={deleteProgress} handleUpdateProgress={handleUpdateProgress} setTasks={setTasks} projects={projects} userType={userType} stafId={localStorage.getItem('stafId')} staffs={staffs} managers={managers} deleteTask={handleDelete} />}
           />
           <Route
             path="/task-report"
@@ -925,12 +953,17 @@ function AdminDashboard({ staffs, setLoggedInManager, setIsCheckedIn, setIsCheck
             path="/progresses"
             element={
               <TaskProgress
+                progresId={progresId}
+                progressId={localStorage.getItem('progressId')}
                 tasks={tasks}
                 userType={useType}
                 progresses={progresses}
+                setProgresses={setProgresses}
                 updateProgress={updateProgress}
                 deleteProgress={deleteProgress}
                 handleUpdateProgress={handleUpdateProgress}
+                unreadProgressCount={unreadProgressCount}
+                setUnreadProgressCount={setUnreadProgressCount}
               />
             }
           />

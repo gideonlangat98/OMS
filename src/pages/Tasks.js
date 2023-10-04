@@ -8,7 +8,7 @@ import axios from 'axios';
 import { OmsContext } from '../components/auth/AuthContext';
 import { randomColor } from 'randomcolor';
 
-const Tasks = ({ staffs, managers, progresses, loggedInStaff, updateProgress, useType, deleteProgress, handleUpdateProgress, projects, requests, deleteRequest, updateRequest, handleUpdateRequest, deleteTask, userType, tasks, setTasks }) => {
+const Tasks = ({ staffs, managers, progresses, progresId, unreadProgressCount, setUnreadProgressCount, loggedInStaff, updateProgress, useType, deleteProgress, handleUpdateProgress, projects, requests, deleteRequest, updateRequest, handleUpdateRequest, deleteTask, userType, tasks, setTasks }) => {
   const [showModal, setShowModal] = useState(false);
   const [showShareModal, setShowShareModal] = useState(false);
   const [editingTaskId, setEditingTaskId] = useState(null);
@@ -41,12 +41,30 @@ const Tasks = ({ staffs, managers, progresses, loggedInStaff, updateProgress, us
     setShowProgress(false);
   };
 
-  const toggleProgress = () => {
+  const toggleProgress = async () => {
     setShowProgress(!showProgress);
     setShowTasksTable(false);
     setShowRequests(false);
-  };
+    setUnreadProgressCount(0);
 
+
+
+    if (userType === 'admin') {
+      try {
+        const token = localStorage.getItem('token');
+        const patchUrl = `${backendUrl}/progresses/${progresId}/update_seen`;
+        await axios.put(patchUrl, null, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+
+      } catch (error) {
+        console.error('Error updating progress seen status:', error);
+      }
+    }
+  };  
+  
   const [taskColors] = useState(() => {
     const initialColors = {}; // Store colors for each task
     tasks.forEach((task) => {
@@ -473,11 +491,13 @@ const Tasks = ({ staffs, managers, progresses, loggedInStaff, updateProgress, us
                   >
                     Not Started
                   </Button>
-                  <Button variant={form.isComplete === 'In Progress' ? 'primary' : 'secondary'}
-                   onClick={() => handleChange({ target: { name: 'isComplete', value: 'In Progress' } })}
-                   >
-                    In Progress
-                  </Button>
+                  <div className='text-white'>
+                    <Button classname='text-white' variant={form.isComplete === 'In Progress' ? 'primary' : 'secondary'}
+                     onClick={() => handleChange({ target: { name: 'isComplete', value: 'In Progress' } })}
+                    >
+                      In Progress
+                    </Button>
+                  </div>
                   <Button variant={form.isComplete === 'Completed Task' ? 'primary' : 'secondary'}
                    onClick={() => handleChange({ target: { name: 'isComplete', value: 'Completed Task' } })}
                    >
@@ -547,11 +567,18 @@ const Tasks = ({ staffs, managers, progresses, loggedInStaff, updateProgress, us
       <div className="w-1/4 pr-4">
           <div className="mb-3">
             <h4>Menu</h4>
-            <div className="mt-3">
+            <div className="mt-8">
               <Link to="#" onClick={toggleProgress} className='text-xl font-bold no-underline hover:underline'>
-                Task Progress Update
+                <span style={{ position: 'relative' }}>
+                Task
+              <span className="absolute transform -translate-y-1/2 bg-red-500 text-white px-1 py-0.3 mr-10 rounded-full">
+                {unreadProgressCount}
+              </span>
+              </span>
+              Progress Update
               </Link>
             </div>
+
             <div className="mt-3">
               <Link to="#" onClick={toggleRequests} className='text-xl font-bold no-underline hover:underline'>
                 Special Request
@@ -691,6 +718,9 @@ const Tasks = ({ staffs, managers, progresses, loggedInStaff, updateProgress, us
               handleUpdateProgress={handleUpdateProgress}
               loggedInStaff={loggedInStaff}
               tasks={tasks}
+              unreadProgressCount={unreadProgressCount}
+              setUnreadProgressCount={setUnreadProgressCount}
+              progresId={progresId}
             />
           )}
         </div>

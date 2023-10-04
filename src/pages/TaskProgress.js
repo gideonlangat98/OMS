@@ -4,7 +4,7 @@ import { Button, Modal, Alert, Form, Row, Col } from 'react-bootstrap';
 import { OmsContext } from '../components/auth/AuthContext';
 import axios from 'axios';
 
-function TaskProgress({ handleUpdateProgress, updateProgress, tasks, useType, loggedInStaff, userType, progresses, managers, deleteProgress }) {
+function TaskProgress({ handleUpdateProgress, progressId, updateProgress, tasks, useType, loggedInStaff, userType, progresses, managers, deleteProgress }) {
   const [show, setShow] = useState(false);
   const [editMode, setEditMode] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
@@ -23,6 +23,7 @@ function TaskProgress({ handleUpdateProgress, updateProgress, tasks, useType, lo
     exceeded_by: 0, // Initialize exceeded_by to 0
     granted_time: '',
     delivery_time: '',
+    progress_id: progressId
   });
 
   useEffect(() => {

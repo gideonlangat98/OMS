@@ -17,7 +17,7 @@ import {
   FaThLarge
 } from 'react-icons/fa';
 
-const Sidebar = ({ dashboardType, unreadMessageCount }) => {
+const Sidebar = ({ dashboardType, unreadMessageCount, unreadProgressCount, setUnreadProgressCount }) => {
   const [open, setOpen] = useState(true);
   const [mobileMenu, setMobileMenu] = useState(false);
 
@@ -41,9 +41,13 @@ const Sidebar = ({ dashboardType, unreadMessageCount }) => {
     { title: 'Tasks Report', path: '/task-report', icon: <FaRegFileAlt /> },
     { title: 'Company News', path: '/news', icon: <AiOutlineFieldTime /> },
     { title: 'Check Status', path: '/check-status', icon: <AiOutlineFieldTime /> },
-    { title: 'Meetings', path: '/meeting', icon: <AiOutlineMessage /> },
+    { title: 'Meetings', path: '/meeting', icon: <AiOutlineMessage /> }, 
     { title: 'Chat', path: '/chat', icon: <AiOutlineMessage /> },
   ];
+
+  // const resetUnreadProgressCount = () => {
+  //   setUnreadProgressCount(0);
+  // }
 
   return (
     <>
@@ -110,6 +114,7 @@ const Sidebar = ({ dashboardType, unreadMessageCount }) => {
                   alignItems: 'center',
                   width: '100%',
                 }}
+              
               >
                 {menu.icon && (
                   <span className="text-2xl mr-2">{menu.icon}</span>
@@ -121,6 +126,11 @@ const Sidebar = ({ dashboardType, unreadMessageCount }) => {
                 {menu.title === 'Chat' && unreadMessageCount > 0 && (
                   <span className="absolute transform -translate-y-1/2 bg-red-500 text-white px-1 py-0.3 mb-2 ml-4 rounded-full">
                     {unreadMessageCount}
+                  </span>
+                )}
+                {menu.title === 'Tasks' && unreadProgressCount > 0 && (
+                  <span className="absolute transform -translate-y-1/2 bg-red-500 text-white px-1 py-0.3 mb-2 ml-4 rounded-full">
+                    {unreadProgressCount}
                   </span>
                 )}
               </Link>

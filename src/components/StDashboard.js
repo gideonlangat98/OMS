@@ -39,6 +39,7 @@ function StDashboard({ staffs, setStaffs, isStaff, isCheckedIn, isCheckedOut, se
   const [unreadMessageCount, setUnreadMessageCount] = useState(0);
   const [unreadTaskCount, setUnreadTaskCount] = useState(0);
   const [readMessageIds, setReadMessageIds] = useState([]);
+  const [unreadProgressCount, setUnreadProgressCount] = useState(0);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -613,7 +614,7 @@ function StDashboard({ staffs, setStaffs, isStaff, isCheckedIn, isCheckedOut, se
           <Route path="/profile" element={<ProfilePage staffs={staffs} updateLoggedIn={updateLoggedIn}/>} />
           <Route
             path="/tasks"
-            element={<Tasks tasks={tasks} loggedInStaff={loggedInStaff} managers={managers} requests={requests} updateRequest={updateRequest} deleteRequest={deleteRequest} handleUpdateRequest={handleUpdateRequest} progresses={progresses} updateProgress={updateProgress} deleteProgress={deleteProgress} handleUpdateProgress={handleUpdateProgress} setTasks={setTasks} useType={useType} stafId={localStorage.getItem('stafId')} staffs={staffs} />}
+            element={<Tasks tasks={tasks} setUnreadProgressCount={setUnreadProgressCount} loggedInStaff={loggedInStaff} managers={managers} requests={requests} updateRequest={updateRequest} deleteRequest={deleteRequest} handleUpdateRequest={handleUpdateRequest} progresses={progresses} updateProgress={updateProgress} deleteProgress={deleteProgress} handleUpdateProgress={handleUpdateProgress} setTasks={setTasks} useType={useType} stafId={localStorage.getItem('stafId')} staffs={staffs} />}
           />
           <Route
             path="/chats"
@@ -704,6 +705,7 @@ function StDashboard({ staffs, setStaffs, isStaff, isCheckedIn, isCheckedOut, se
                 deleteProgress={deleteProgress}
                 handleUpdateProgress={handleUpdateProgress}
                 loggedInStaff={loggedInStaff}
+                setUnreadProgressCount={setUnreadProgressCount}
               />
             }
           />

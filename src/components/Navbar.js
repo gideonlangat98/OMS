@@ -3,7 +3,7 @@ import { FaUser } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import { OmsContext } from './auth/AuthContext';
 
-const Navbar = ({ userType, useType, setIsCheckedIn, setIsCheckedOut, loggedInStaff, setLoggedInManager, setLoggedInStaff, updateLoggedIn, loggedInManager }) => {
+const Navbar = ({ userType, useType, setIsCheckedIn, unreadProgressCount, setUnreadProgressCount, setIsCheckedOut, loggedInStaff, setLoggedInManager, setLoggedInStaff, updateLoggedIn, loggedInManager }) => {
   const navigate = useNavigate();
   const { backendUrl } = useContext(OmsContext);
 
@@ -53,11 +53,13 @@ const Navbar = ({ userType, useType, setIsCheckedIn, setIsCheckedOut, loggedInSt
           localStorage.removeItem('user');
           localStorage.removeItem('loggedInStaff');
           localStorage.removeItem('loggedInManager');
+          localStorage.removeItem('progresses');
 
           // Update logged-in state
           updateLoggedIn(false);
           setIsCheckedIn(null); // Reset to null when the user logs out
           setIsCheckedOut(null); // Reset to null when the user logs out
+          // setUnreadProgressCount(0);
          
 
           // Navigate to the desired page
